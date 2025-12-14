@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\MutasiKeluarga;
+use App\Models\Keluarga;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +27,23 @@ class MutasiKeluargaController extends Controller
             'alasan' => 'nullable|string',
         ]);
 
+        if ($request->keluarga_id) {
+            $keluarga = Keluarga::with('rumah')->find($request->keluarga_id);
+            if ($keluarga) {
+                $payload['nama_keluarga'] = $keluarga->nama_keluarga;
+                $payload['kepala_keluarga'] = $keluarga->kepala_keluarga;
+                $payload['alamat'] = $keluarga->alamat;
+                $payload['kepemilikan'] = $keluarga->kepemilikan;
+                $payload['status_keluarga'] = $keluarga->status;
+                $payload['rumah_id'] = $keluarga->rumah_id;
+            }
+        }
+
         $mutasi = MutasiKeluarga::create($payload);
+
+        if ($request->keluarga_id) {
+            Keluarga::find($request->keluarga_id)?->delete();
+        }
 
         return response()->json(['success' => true, 'data' => $mutasi], 201);
     }
