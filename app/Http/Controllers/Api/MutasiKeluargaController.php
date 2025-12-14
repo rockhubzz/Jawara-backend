@@ -13,7 +13,7 @@ class MutasiKeluargaController extends Controller
     public function index()
     {
         // paginated response optional — here return all for simplicity
-        $data = MutasiKeluarga::with('keluarga')->orderBy('id', 'DESC')->paginate(10);
+        $data = MutasiKeluarga::orderBy('id', 'DESC')->paginate(10);
 
         return response()->json($data);
     }
@@ -50,7 +50,7 @@ class MutasiKeluargaController extends Controller
 
     public function show($id)
     {
-        $mutasi = MutasiKeluarga::with('keluarga')->find($id);
+        $mutasi = MutasiKeluarga::find($id);
 
         if (!$mutasi) {
             return response()->json(['success' => false, 'message' => 'Not found'], 404);
