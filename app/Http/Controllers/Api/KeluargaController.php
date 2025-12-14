@@ -19,7 +19,7 @@ class KeluargaController extends Controller
     // GET detail by ID
     public function show($id)
     {
-        $data = Keluarga::find($id);
+        $data = Keluarga::with('rumah')->find($id);
         $anggota = Warga::where('keluarga_id', $id)->get();
 
         if (!$data) {
